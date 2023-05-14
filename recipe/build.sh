@@ -22,6 +22,8 @@ fi
 if [[ "${target_platform}" == osx-* ]]; then
     QT="0"
     V4L="0"
+elif [[ "${target_platform}" == linux-armv7l ]]; then
+    QT="0"
 elif [[ "${target_platform}" == linux-ppc64le ]]; then
     QT="0"
 fi
@@ -80,7 +82,7 @@ cmake ${CMAKE_ARGS} -LAH -G "Ninja"                                       \
     -DBUILD_PROTOBUF=0                                                    \
     -DPROTOBUF_UPDATE_FILES=1                                             \
     -DBUILD_OPENEXR=1                                                     \
-    -DBUILD_JASPER=0                                                      \
+    -DBUILD_JASPER=1                                                      \
     -DWITH_JASPER=1                                                       \
     -DWITH_OPENJPEG=0                                                     \
     -DBUILD_JPEG=0                                                        \

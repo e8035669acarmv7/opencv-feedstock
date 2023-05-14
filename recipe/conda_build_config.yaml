@@ -3,6 +3,6 @@
 # Due to the overlap between the ecosystems, I (hmaarrfk) am
 # deciding to build with both versions of hdf5 during this transition
 # period
-hdf5:
-  - 1.12.2
-  - 1.14.0
+# hdf5:
+#   - 1.12.2
+#   - 1.14.0
