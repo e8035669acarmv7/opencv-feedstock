@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
-
-set +ex
+#!/bin/bash
+set -ex
 
 # CMake FindPNG seems to look in libpng not libpng16
 # https://gitlab.kitware.com/cmake/cmake/blob/master/Modules/FindPNG.cmake#L55
@@ -8,14 +7,12 @@ ln -s $PREFIX/include/libpng16 $PREFIX/include/libpng
 
 QT="5"
 V4L="1"
+OPENVINO="1"
 
 if [[ "${target_platform}" == linux-* ]]; then
     # Looks like there's a bug in Opencv 3.2.0 for building with FFMPEG
     # with GCC opencv/issues/8097
     export CXXFLAGS="$CXXFLAGS -D__STDC_CONSTANT_MACROS"
-
-    export CPPFLAGS="${CPPFLAGS//-std=c++17/-std=c++11}"
-    export CXXFLAGS="${CXXFLAGS//-std=c++17/-std=c++11}"
     OPENMP="-DWITH_OPENMP=1"
 fi
 
@@ -26,6 +23,7 @@ elif [[ "${target_platform}" == linux-armv7l ]]; then
     QT="0"
 elif [[ "${target_platform}" == linux-ppc64le ]]; then
     QT="0"
+    OPENVINO="0"
 fi
 
 
@@ -38,17 +36,11 @@ export PKG_CONFIG_LIBDIR=$PREFIX/lib
 
 IS_PYPY=$(${PYTHON} -c "import platform; print(int(platform.python_implementation() == 'PyPy'))")
 
-# Python 3.8 now combines the "m" and the "no m" builds in 1.
-if [ ${PY_VER} == "3.6" ] || [ ${PY_VER} == "3.7" ]; then
-    LIB_PYTHON="${PREFIX}/lib/libpython${PY_VER}${SHLIB_EXT}m"
-    INC_PYTHON="$PREFIX/include/python${PY_VER}m"
+LIB_PYTHON="${PREFIX}/lib/libpython${PY_VER}${SHLIB_EXT}"
+if [[ ${IS_PYPY} == "1" ]]; then
+    INC_PYTHON="$PREFIX/include/pypy${PY_VER}"
 else
-    LIB_PYTHON="${PREFIX}/lib/libpython${PY_VER}${SHLIB_EXT}"
-    if [[ ${IS_PYPY} == "1" ]]; then
-        INC_PYTHON="$PREFIX/include/pypy${PY_VER}"
-    else
-        INC_PYTHON="$PREFIX/include/python${PY_VER}"
-    fi
+    INC_PYTHON="$PREFIX/include/python${PY_VER}"
 fi
 
 # FFMPEG building requires pkgconfig
@@ -56,7 +48,9 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig
 
 mkdir -p build
 cd build
-cmake ${CMAKE_ARGS} -LAH -G "Ninja"                                       \
+
+cmake -LAH -G "Ninja"                                                     \
+    ${CMAKE_ARGS}                                                         \
     -DCMAKE_BUILD_TYPE="Release"                                          \
     -DCMAKE_PREFIX_PATH=${PREFIX}                                         \
     -DCMAKE_INSTALL_PREFIX=${PREFIX}                                      \
@@ -71,6 +65,7 @@ cmake ${CMAKE_ARGS} -LAH -G "Ninja"                                       \
     -DLAPACK_LAPACKE_H=lapacke.h                                          \
     -DLAPACK_CBLAS_H=cblas.h                                              \
     -DLAPACK_LIBRARIES=lapack\;cblas                                      \
+    -DCMAKE_CXX_STANDARD=17                                               \
     -DWITH_EIGEN=1                                                        \
     -DBUILD_TESTS=0                                                       \
     -DBUILD_DOCS=0                                                        \
@@ -93,6 +88,7 @@ cmake ${CMAKE_ARGS} -LAH -G "Ninja"                                       \
     -DWITH_OPENCLAMDFFT=0                                                 \
     -DWITH_OPENCLAMDBLAS=0                                                \
     -DWITH_OPENCL_D3D11_NV=0                                              \
+    -DWITH_OPENVINO=$OPENVINO                                             \
     -DWITH_1394=0                                                         \
     -DWITH_OPENNI=0                                                       \
     -DWITH_HDF5=1                                                         \
