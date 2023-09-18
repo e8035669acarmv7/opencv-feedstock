@@ -21,6 +21,7 @@ if [[ "${target_platform}" == osx-* ]]; then
     V4L="0"
 elif [[ "${target_platform}" == linux-armv7l ]]; then
     QT="0"
+    OPENVINO="0"
 elif [[ "${target_platform}" == linux-ppc64le ]]; then
     QT="0"
     OPENVINO="0"
