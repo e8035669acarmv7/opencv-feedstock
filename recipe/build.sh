@@ -5,7 +5,6 @@ set -ex
 # https://gitlab.kitware.com/cmake/cmake/blob/master/Modules/FindPNG.cmake#L55
 ln -s $PREFIX/include/libpng16 $PREFIX/include/libpng
 
-QT="5"
 V4L="1"
 OPENVINO="1"
 
@@ -16,20 +15,27 @@ if [[ "${target_platform}" == linux-* ]]; then
     OPENMP="-DWITH_OPENMP=1"
 fi
 
-if [[ "${target_platform}" == osx-* ]]; then
+if [[ "$qt_version" == "5" ]]; then
+    QT="5"
+elif [[ "$qt_version" == "6" ]]; then
+    QT="6"
+else
     QT="0"
+fi
+
+if [[ "${target_platform}" == osx-* ]]; then
     V4L="0"
 elif [[ "${target_platform}" == linux-armv7l ]]; then
     QT="0"
     OPENVINO="0"
 elif [[ "${target_platform}" == linux-ppc64le ]]; then
-    QT="0"
     OPENVINO="0"
 fi
 
 
 if [[ "${target_platform}" != "${build_platform}" ]]; then
     CMAKE_ARGS="${CMAKE_ARGS} -DProtobuf_PROTOC_EXECUTABLE=$BUILD_PREFIX/bin/protoc"
+    CMAKE_ARGS="${CMAKE_ARGS} -DQT_HOST_PATH=${BUILD_PREFIX}"
 fi
 
 
@@ -78,8 +84,9 @@ cmake -LAH -G "Ninja"                                                     \
     -DBUILD_PROTOBUF=0                                                    \
     -DPROTOBUF_UPDATE_FILES=1                                             \
     -DBUILD_OPENEXR=1                                                     \
+    -DWITH_OPENEXR=0                                                      \
     -DBUILD_JASPER=1                                                      \
-    -DWITH_JASPER=1                                                       \
+    -DWITH_JASPER=0                                                       \
     -DWITH_OPENJPEG=0                                                     \
     -DBUILD_JPEG=0                                                        \
     -DWITH_V4L=$V4L                                                       \
@@ -138,4 +145,4 @@ cmake -LAH -G "Ninja"                                                     \
     -DOPENCV_PYTHON2_INSTALL_PATH=                                        \
     ..
 
-ninja install -v -j${CPU_COUNT}
+ninja install -j${CPU_COUNT}
