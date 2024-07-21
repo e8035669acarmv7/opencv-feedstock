@@ -111,7 +111,7 @@ requirements:
     - gettext
     - glib
     - hdf5
-    # - jasper
+    - jasper
     - libcblas
     - libiconv                       # [unix]
     - libjpeg-turbo
@@ -125,7 +125,7 @@ requirements:
     - qt-main                        # [qt_version == 5]
     - qt6-main                       # [qt_version == 6]
     - zlib
-    - libopenvino-dev                # [not ppc64le]
+    - libopenvino-dev                # [not ppc64le and not armv7l]
 
 test:
     requires:
@@ -134,8 +134,8 @@ test:
       - pkg-config                    # [not win]
       # Test with the two currently supported lapack implementatons
       # One test done on different versions of python on each platform
-      # - liblapack * *openblas         # [py==36 and linux64]
-      # - liblapack * *mkl              # [py==37 and linux64]
+      - liblapack * *openblas         # [py==36]
+      - liblapack * *mkl              # [py==37 and linux64]
       - cmake
       - ninja
     files:
@@ -263,8 +263,8 @@ outputs:
       requires:
         # Test with the two currently supported lapack implementatons
         # One test done on different versions of python on each platform
-        # - liblapack * *openblas         # [py==39 and linux64]
-        # - liblapack * *mkl              # [py==310 and linux64]
+        - liblapack * *openblas         # [py==39]
+        - liblapack * *mkl              # [py==310 and linux64]
       imports:
         - cv2
         - cv2.xfeatures2d
