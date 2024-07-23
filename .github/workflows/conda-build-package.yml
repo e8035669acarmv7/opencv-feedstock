@@ -8,26 +8,16 @@ jobs:
       fail-fast: true
       matrix:
         include:
-        - name: linux_armv7l_config_py310_ffmpeg6.yaml
-          config_file: .ci_support/linux_armv7l_config_py310_ffmpeg6.yaml
-        - name: linux_armv7l_config_py310_ffmpeg7.yaml
-          config_file: .ci_support/linux_armv7l_config_py310_ffmpeg7.yaml
-        - name: linux_armv7l_config_py311_ffmpeg6.yaml
-          config_file: .ci_support/linux_armv7l_config_py311_ffmpeg6.yaml
-        - name: linux_armv7l_config_py311_ffmpeg7.yaml
-          config_file: .ci_support/linux_armv7l_config_py311_ffmpeg7.yaml
-        - name: linux_armv7l_config_py312_ffmpeg6.yaml
-          config_file: .ci_support/linux_armv7l_config_py312_ffmpeg6.yaml
-        - name: linux_armv7l_config_py312_ffmpeg7.yaml
-          config_file: .ci_support/linux_armv7l_config_py312_ffmpeg7.yaml
-        - name: linux_armv7l_config_py38_ffmpeg6.yaml
-          config_file: .ci_support/linux_armv7l_config_py38_ffmpeg6.yaml
-        - name: linux_armv7l_config_py38_ffmpeg7.yaml
-          config_file: .ci_support/linux_armv7l_config_py38_ffmpeg7.yaml
-        - name: linux_armv7l_config_py39_ffmpeg6.yaml
-          config_file: .ci_support/linux_armv7l_config_py39_ffmpeg6.yaml
-        - name: linux_armv7l_config_py39_ffmpeg7.yaml
-          config_file: .ci_support/linux_armv7l_config_py39_ffmpeg7.yaml
+        - name: linux_armv7l_config_py310.yaml
+          config_file: .ci_support/linux_armv7l_config_py310.yaml
+        - name: linux_armv7l_config_py311.yaml
+          config_file: .ci_support/linux_armv7l_config_py311.yaml
+        - name: linux_armv7l_config_py312.yaml
+          config_file: .ci_support/linux_armv7l_config_py312.yaml
+        - name: linux_armv7l_config_py38.yaml
+          config_file: .ci_support/linux_armv7l_config_py38.yaml
+        - name: linux_armv7l_config_py39.yaml
+          config_file: .ci_support/linux_armv7l_config_py39.yaml
 
     runs-on: ubuntu-latest
 
